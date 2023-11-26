@@ -4,6 +4,7 @@ import { extractDayMonth } from "../utils/date-time";
 import { fahrenheitTemperatureConverter } from "../utils/temperature";
 import ForecastHeader from "./forecast-header";
 import WeatherIcon from "./weather-icon";
+import { TFavorites } from "../models/Tfavorites";
 
 type ForecastsProps = {
   localizedName: string;
@@ -31,6 +32,8 @@ type ForecastsProps = {
   Headline: {
     Text: string;
   };
+  favorites?: TFavorites;
+  keyLocation?: string;
 };
 
 type temperatureArray = {
@@ -54,6 +57,8 @@ export default function Forecasts({
   currentTemperature,
   isDayTime,
   weatherText,
+  favorites,
+  keyLocation,
 }: ForecastsProps) {
   const [temperatures, setTemperatures] = useState<temperatureArray>();
   const [celsiusActiveMin, setCelsiusActiveMin] = useState<boolean[]>([]);
@@ -115,6 +120,8 @@ export default function Forecasts({
         temperatureF={currentTemperature}
         isDayTime={isDayTime}
         weatherText={weatherText}
+        favorites={favorites}
+        keyLocation={keyLocation}
       />
 
       <h1 className="mt-10 text-2xl font-bold text-center underline sm:mt-0 sm:text-4xl">

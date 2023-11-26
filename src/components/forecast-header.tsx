@@ -4,6 +4,11 @@ import { WiDaySunny, WiNightClear } from "react-icons/wi";
 
 import { dateAndTimeConvert } from "../utils/date-time";
 import { fahrenheitTemperatureConverter } from "../utils/temperature";
+import { useAuth } from "../context/auth-context";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { TFavorites } from "../models/Tfavorites";
 
 type ForecastHeaderProps = {
   localizedName: string;
@@ -12,6 +17,8 @@ type ForecastHeaderProps = {
   temperatureF: number;
   isDayTime: boolean;
   weatherText: string;
+  favorites?: TFavorites;
+  keyLocation?: string;
 };
 
 export default function ForecastHeader({
@@ -21,14 +28,99 @@ export default function ForecastHeader({
   temperatureF,
   isDayTime,
   weatherText,
+  favorites,
+  keyLocation,
 }: ForecastHeaderProps) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [celsiusActive, setCelsiusActive] = useState(true);
   const [newDateConvert, setNewDateConvert] = useState<string>();
   const [celsius, setCelsius] = useState<number>();
+  const [headerFavorites, setHeaderFavorites] = useState<
+    { name: string; key: string }[]
+  >([]);
+  const [currentFavorite, setCurrentFavorite] = useState<boolean>();
 
   const toggleTemperatures = () => {
     setCelsiusActive(!celsiusActive);
   };
+
+  const handleAddToFavorites = async (name: string, key: string) => {
+    if (user) {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_LOCAL_API_PATH}/auth/favorites/add/${user.id}`,
+          {
+            name,
+            key,
+          }
+        );
+        const { data, message, noError } = response.data;
+        if (message) {
+          if (noError) {
+            toast.success(message);
+          } else {
+            toast.error(message);
+          }
+        }
+
+        if (data) {
+          setHeaderFavorites(data);
+        }
+      } catch (err) {
+        console.error("Error adding to favorites:", err);
+        toast.error("Error adding to favorites");
+      }
+    }
+  };
+
+  const handleRemoveFromFavorites = async (key: string) => {
+    if (user) {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_LOCAL_API_PATH}/auth/remove/favorite/${user.id}`,
+          {
+            key,
+          }
+        );
+        const { data, message, noError } = response.data;
+
+        if (message) {
+          if (noError) {
+            toast.success(message);
+          } else {
+            toast.error(message);
+          }
+        }
+
+        if (data) {
+          setHeaderFavorites(data);
+        }
+      } catch (err) {
+        console.error("Error removing from favorites:", err);
+        toast.error("Error removing from favorites");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (favorites) {
+      setHeaderFavorites(favorites);
+    } else {
+      setHeaderFavorites([]);
+    }
+  }, [favorites]);
+
+  useEffect(() => {
+    if (headerFavorites && keyLocation) {
+      const isCurrentFavorite = headerFavorites.some(
+        (favorite) => favorite.key === keyLocation
+      );
+      setCurrentFavorite(isCurrentFavorite);
+    } else {
+      setCurrentFavorite(false);
+    }
+  }, [headerFavorites, keyLocation]);
 
   useEffect(() => {
     setNewDateConvert(dateAndTimeConvert(currentDate));
@@ -46,9 +138,30 @@ export default function ForecastHeader({
           {localizedName}
         </h1>
         <h2 className="text-xl sm:text-2xl">{newDateConvert}</h2>
-        <button className="w-10 mt-5 sm:mt-0 group" title="Add To Favorites">
-          <FaRegStar className="hidden w-8 h-8 group-hover:block hover:text-yellow-300 dark:hover:text-yellow-500" />
-          <FaStar className="w-8 h-8 text-yellow-300 dark:text-yellow-500 group-hover:hidden" />
+        <button
+          onClick={() => {
+            if (user) {
+              if (keyLocation) {
+                if (currentFavorite) {
+                  handleRemoveFromFavorites(keyLocation);
+                } else {
+                  handleAddToFavorites(localizedName, keyLocation);
+                }
+              }
+            } else {
+              navigate("/login");
+            }
+          }}
+          className="w-10 mt-5 sm:mt-0"
+          title="Add To Favorites"
+        >
+          <FaStar
+            className={`w-8 h-8 ${
+              currentFavorite
+                ? "text-yellow-300 dark:text-yellow-500 hover:text-gray-500 hover:dark:text-gray-300"
+                : "text-gray-500 dark:text-gray-300 hover:text-yellow-300 hover:dark:text-yellow-500"
+            }`}
+          />
         </button>
       </div>
       <p className="self-center mt-5 text-lg">{headline}</p>
