@@ -13,8 +13,11 @@ import {
   fetchFiveDaysForecast,
 } from "../server/data";
 import { Error, Loading } from "../components/error-loading-skeleton";
+import UserPanel from "../components/user-panel";
+import { useAuth } from "../context/auth-context";
 
 export default function Home() {
+  const { user } = useAuth();
   const [location, setLocation] = useState<TLocationApiResponse | null>(null);
   const [currentConditions, setCurrentConditions] =
     useState<TCurrentConditionsApiResponse | null>(null);
@@ -49,7 +52,6 @@ export default function Home() {
           );
           if (currentConData) {
             setCurrentConditions(currentConData);
-            console.log(currentConData);
           }
 
           const dailyForecastsData = await fetchFiveDaysForecast(
@@ -57,14 +59,13 @@ export default function Home() {
           );
           if (dailyForecastsData) {
             setDailyForecasts(dailyForecastsData);
-            console.log(dailyForecastsData);
           }
         }
       }
     };
     fetchData();
-    console.log(location);
   }, [location]);
+
   return (
     <div>
       <div className="flex justify-center">
@@ -95,17 +96,25 @@ export default function Home() {
       </div>
       {location && currentConditions && dailyForecasts ? (
         location.data && currentConditions.data && dailyForecasts.data ? (
-          <Forecasts
-            currentDate={currentConditions.data.LocalObservationDateTime}
-            currentTemperature={
-              currentConditions.data.Temperature.Imperial.Value
-            }
-            dailyForecasts={dailyForecasts.data.DailyForecasts}
-            Headline={dailyForecasts.data.Headline}
-            localizedName={location.data.LocalizedName}
-            isDayTime={currentConditions.data.IsDayTime}
-            weatherText={currentConditions.data.WeatherText}
-          />
+          user ? (
+            <UserPanel
+              currentConditions={currentConditions}
+              dailyForecasts={dailyForecasts}
+              location={location}
+            />
+          ) : (
+            <Forecasts
+              currentDate={currentConditions.data.LocalObservationDateTime}
+              currentTemperature={
+                currentConditions.data.Temperature.Imperial.Value
+              }
+              dailyForecasts={dailyForecasts.data.DailyForecasts}
+              Headline={dailyForecasts.data.Headline}
+              localizedName={location.data.LocalizedName}
+              isDayTime={currentConditions.data.IsDayTime}
+              weatherText={currentConditions.data.WeatherText}
+            />
+          )
         ) : (
           <Error />
         )
