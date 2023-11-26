@@ -6,6 +6,7 @@ import Navbar from "./components/navbar";
 import ThemeSwitch from "./components/theme-switch";
 import ThemeContextProvider from "./context/theme-context";
 import Home from "./pages/home";
+import Footer from "./components/footer";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
             </Routes>
+            <Footer />
           </BrowserRouter>
 
           <Toaster position="top-right" />
