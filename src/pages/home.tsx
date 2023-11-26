@@ -12,6 +12,7 @@ import {
   fetchCurrentConditions,
   fetchFiveDaysForecast,
 } from "../server/data";
+import { Error, Loading } from "../components/error-loading-skeleton";
 
 export default function Home() {
   const [location, setLocation] = useState<TLocationApiResponse | null>(null);
@@ -93,9 +94,7 @@ export default function Home() {
         </div>
       </div>
       {location && currentConditions && dailyForecasts ? (
-        location.data &&
-        currentConditions.data &&
-        dailyForecasts.data && (
+        location.data && currentConditions.data && dailyForecasts.data ? (
           <Forecasts
             currentDate={currentConditions.data.LocalObservationDateTime}
             currentTemperature={
@@ -104,12 +103,15 @@ export default function Home() {
             dailyForecasts={dailyForecasts.data.DailyForecasts}
             Headline={dailyForecasts.data.Headline}
             localizedName={location.data.LocalizedName}
+            isDayTime={currentConditions.data.IsDayTime}
+            weatherText={currentConditions.data.WeatherText}
           />
+        ) : (
+          <Error />
         )
       ) : (
-        <div>stam</div>
+        <Loading />
       )}
-      {/* <Forecasts currentDate={currentConditions.data.LocalObservationDateTime} /> */}
     </div>
   );
 }
