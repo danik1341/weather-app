@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 html,
-body {
+body,
+div#root {
   height: 100%;
 }
