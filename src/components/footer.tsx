@@ -2,15 +2,15 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="p-10 footer bg-base-300 text-base-content">
-      <nav>
+    <footer className="sticky bottom-0 left-0 w-full p-5 sm:p-10 sm:footer bg-base-300 text-base-content">
+      <nav className="my-3 space-x-2 sm:my-0 sm:space-x-0">
         <header className="footer-title">Services</header>
         <a className="link link-hover">Branding</a>
         <a className="link link-hover">Design</a>
         <a className="link link-hover">Marketing</a>
         <a className="link link-hover">Advertisement</a>
       </nav>
-      <nav>
+      <nav className="my-3 space-x-2 sm:my-0 sm:space-x-0">
         <header className="footer-title">Company</header>
         <a className="link link-hover">About us</a>
         <a className="link link-hover">Contact</a>
@@ -19,7 +19,7 @@ export default function Footer() {
       </nav>
       <nav>
         <header className="footer-title">Social</header>
-        <div className="grid grid-flow-col gap-4">
+        <div className="flex gap-4 sm:grid sm:grid-flow-col">
           <a>
             <svg
               xmlns="http://www.w3.org/2000/svg"
