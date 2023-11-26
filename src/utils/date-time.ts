@@ -35,7 +35,6 @@ export function extractDayMonth(dateTime: string) {
       month: "2-digit",
     });
 
-    console.log(formattedDate);
     return formattedDate;
   }
 
