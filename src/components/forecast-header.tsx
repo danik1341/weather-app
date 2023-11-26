@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
-import { WiDaySunny } from "react-icons/wi";
+import { WiDaySunny, WiNightClear } from "react-icons/wi";
+
 import { dateAndTimeConvert } from "../utils/date-time";
 import { fahrenheitTemperatureConverter } from "../utils/temperature";
 
@@ -9,6 +10,8 @@ type ForecastHeaderProps = {
   currentDate: string;
   headline: string;
   temperatureF: number;
+  isDayTime: boolean;
+  weatherText: string;
 };
 
 export default function ForecastHeader({
@@ -16,12 +19,12 @@ export default function ForecastHeader({
   currentDate,
   headline,
   temperatureF,
+  isDayTime,
+  weatherText,
 }: ForecastHeaderProps) {
-  console.log("FROM HEADDDDDDDTIMMMMME:", currentDate);
   const [celsiusActive, setCelsiusActive] = useState(true);
   const [newDateConvert, setNewDateConvert] = useState<string>();
   const [celsius, setCelsius] = useState<number>();
-  //   const celsius = fahrenheitTemperatureConverter(temperatureF);
 
   const toggleTemperatures = () => {
     setCelsiusActive(!celsiusActive);
@@ -29,7 +32,6 @@ export default function ForecastHeader({
 
   useEffect(() => {
     setNewDateConvert(dateAndTimeConvert(currentDate));
-    console.log("TIMEEEEEEEEEEEEE:", newDateConvert);
   }, [currentDate]);
 
   useEffect(() => {
@@ -54,7 +56,11 @@ export default function ForecastHeader({
       <div className="self-center mt-10 bg-gray-200 border border-gray-400 shadow-md dark:bg-gray-700 sm:mr-10 xl:mr-0 dark:border-gray-900 sm:mt-16 stats">
         <div className="stat">
           <div className="stat-figure text-sky-500 dark:text-sky-400">
-            <WiDaySunny className="inline-block w-10 h-10 stroke-current" />
+            {isDayTime ? (
+              <WiDaySunny className="inline-block w-10 h-10 stroke-current" />
+            ) : (
+              <WiNightClear className="inline-block w-10 h-10 stroke-current" />
+            )}
           </div>
           <div className="stat-title text-black/80 dark:text-white">
             Current Weahter
@@ -98,7 +104,7 @@ export default function ForecastHeader({
             </div>
           </div>
           <div className="text-gray-500 stat-desc dark:text-white/80">
-            Mostly Sunny
+            {weatherText}
           </div>
         </div>
       </div>
