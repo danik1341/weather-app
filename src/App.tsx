@@ -7,6 +7,9 @@ import ThemeSwitch from "./components/theme-switch";
 import ThemeContextProvider from "./context/theme-context";
 import Home from "./pages/home";
 import Footer from "./components/footer";
+import Login from "./pages/login";
+import SignUp from "./pages/signup";
+import AuthContextProvider from "./context/auth-context";
 
 function App() {
   return (
@@ -16,16 +19,20 @@ function App() {
         <div className=" bg-[#fbe2e3] absolute -z-10 top-[-6rem] right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#946263]" />
         <div className=" bg-[#dbd7fb] absolute -z-10 top-[-1rem] left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem] dark:bg-[#676394]" />
         <ThemeContextProvider>
-          <BrowserRouter>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-            </Routes>
-            <Footer />
-          </BrowserRouter>
+          <AuthContextProvider>
+            <BrowserRouter>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+              </Routes>
+              <Footer />
+            </BrowserRouter>
 
-          <Toaster position="top-right" />
-          <ThemeSwitch />
+            <Toaster position="top-right" />
+            <ThemeSwitch />
+          </AuthContextProvider>
         </ThemeContextProvider>
       </div>
     </div>
