@@ -39,6 +39,24 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+# Running locally -
+This weather app runs an api for the weather forecasts data from Accuweather and has a local server connected/modified to work with MongoDB for a user data base
+
+## First Install dependencies:
+- `npm install`
+
+## Create an .env file
+- DATABASE_URL: Your MongoDB URL connection `mongodb+srv://<username>:<password>@<cluster-name>..........` It will look similar to this. It is very important to also add the cluster name you will be using as Prisma needs it for fetching and writing data.
+- REACT_APP_WEAHTER_API_KEY: The Accuweather api key. This key has only 50 call uses, keep that in mind.
+- REACT_APP_WEATHER_API_PATH: The Accuweather URL path. As of now it is `http://dataservice.accuweather.com` OR `https://dataservice.accuweather.com`. If Accuweather API URL is updated this will be the var to change.
+- REACT_APP_LOCAL_API_PATH: The API URL for your local server. Example `http://localhost:3001`
+
+## Running Frontend
+Simply cd into root folder and run `npm start`
+
+## Running local server
+Navigate to the server folder `cd server` and run `npm start`
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
